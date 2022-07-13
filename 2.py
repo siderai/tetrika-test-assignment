@@ -27,7 +27,7 @@ def get_animals_list(url: str, params: Dict[str, str]) -> None:
     Управление пагинацией происходит через параметр cmcontinue.
     2. В категории "Животные" русской Википедии есть названия на латинице
     (напр., названия одноклеточных). Чтобы соответствовать примеру (Перламутровый лосось),
-    из выборки они исключены.
+    из выборки они исключены. Фильтр: функция is_cyrillic
     3. Цикл отрабатывает за 20-25 секунд.
     """
     response = requests.get(url=url, params=params)
@@ -41,9 +41,6 @@ def get_animals_list(url: str, params: Dict[str, str]) -> None:
 
     if data.get("continue", None):
         params["cmcontinue"] = data["continue"]["cmcontinue"]
-        # иллюстрация рекурсивной работы с api в рантайме:
-        # print(params)
-        # print("recursive step")
         get_animals_list(url, params)
 
 
@@ -54,6 +51,7 @@ def is_cyrillic(title):
 def count_animals_by_first_letter(animals: List[str]) -> None:
     """Принимает на вход список животных, для каждой буквы алфавита выводит число животных,
     название которых с нее начинается.
+    Пример вывода:
     A: 3020
     Б: 2231
     ...
